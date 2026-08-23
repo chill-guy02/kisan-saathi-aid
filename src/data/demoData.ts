@@ -28,6 +28,27 @@ export const weatherDemo = {
   interpretationHi: "कल बारिश की संभावना अधिक है।",
 };
 
+/** Locations the farmer can choose (used for live weather + mandi). */
+export type LocationId = "raipur" | "bhopal" | "nagpur" | "lucknow" | "ludhiana";
+
+export const locations: { id: LocationId; en: string; hi: string; lat: number; lon: number }[] = [
+  { id: "raipur", en: "Raipur", hi: "रायपुर", lat: 21.2514, lon: 81.6296 },
+  { id: "bhopal", en: "Bhopal", hi: "भोपाल", lat: 23.2599, lon: 77.4126 },
+  { id: "nagpur", en: "Nagpur", hi: "नागपुर", lat: 21.1458, lon: 79.0882 },
+  { id: "lucknow", en: "Lucknow", hi: "लखनऊ", lat: 26.8467, lon: 80.9462 },
+  { id: "ludhiana", en: "Ludhiana", hi: "लुधियाना", lat: 30.901, lon: 75.8573 },
+];
+
+export const getLocation = (id: LocationId) =>
+  locations.find((l) => l.id === id) ?? locations[0]!;
+
+/** Per-crop demo mandi prices (₹ / quintal) */
+export const marketPrices: Record<Crop, { min: number; max: number; modal: number }> = {
+  Wheat: { min: 2250, max: 2400, modal: 2350 },
+  Rice: { min: 1950, max: 2200, modal: 2100 },
+  Soybean: { min: 4200, max: 4800, modal: 4550 },
+};
+
 export const marketDemo = {
   crop: "Wheat",
   cropHi: "गेहूं",
