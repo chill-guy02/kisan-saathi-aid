@@ -7,9 +7,9 @@ import {
   farmerProfile,
   formatINR,
   marketDemo,
-  weatherDemo,
   type Crop,
 } from "@/data/demoData";
+import { currentWeather as weatherDemo } from "@/lib/weather";
 
 export type Intent = "advisory" | "weather" | "market" | "cost" | "unknown";
 
