@@ -1,34 +1,37 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Send } from "lucide-react";
-import { getAnswer, suggestedQuestions } from "@/lib/chatEngine";
+import ReactMarkdown from "react-markdown";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { suggestedQuestions } from "@/lib/chatEngine";
 
-type Msg = { role: "user" | "assistant"; text: string };
+const GREETING =
+  "नमस्ते रमेश जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।";
+
+const TOOL_LABELS: Record<string, string> = {
+  "tool-getWeather": "मौसम देख रहा हूँ…",
+  "tool-getMandiPrice": "मंडी भाव देख रहा हूँ…",
+  "tool-calculateFarmCost": "लागत जोड़ रहा हूँ…",
+};
 
 export function ChatAssistant() {
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      role: "assistant",
-      text: "नमस्ते रमेश जी! मौसम, मंडी भाव या खेती की लागत — जो पूछना हो, पूछिए।",
-    },
-  ]);
   const [input, setInput] = useState("");
-  const [thinking, setThinking] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
+
+  const { messages, sendMessage, status, error } = useChat({ transport });
+
+  const isLoading = status === "submitted" || status === "streaming";
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [messages, thinking]);
+  }, [messages, status]);
 
   const ask = (question: string) => {
     const q = question.trim();
-    if (!q || thinking) return;
-    setMessages((m) => [...m, { role: "user", text: q }]);
+    if (!q || isLoading) return;
     setInput("");
-    setThinking(true);
-    setTimeout(() => {
-      setMessages((m) => [...m, { role: "assistant", text: getAnswer(q).text }]);
-      setThinking(false);
-    }, 500);
+    void sendMessage({ text: q });
   };
 
   return (
@@ -36,26 +39,58 @@ export function ChatAssistant() {
       <header className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-xl font-bold">💬 किसान साथी से पूछें</h2>
         <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-          प्रोटोटाइप सलाह
+          AI सहायक
         </span>
       </header>
 
-      <div className="mt-4 max-h-80 space-y-3 overflow-y-auto pr-1">
-        {messages.map((m, i) => (
-          <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
-            <div
-              className={
-                m.role === "user"
-                  ? "max-w-[85%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-base text-primary-foreground"
-                  : "max-w-[92%] rounded-2xl rounded-bl-md bg-muted px-4 py-2.5 text-base text-foreground"
-              }
-            >
-              {m.text}
-            </div>
+      <div className="mt-4 max-h-96 space-y-3 overflow-y-auto pr-1">
+        <div className="flex justify-start">
+          <div className="max-w-[92%] rounded-2xl rounded-bl-md bg-muted px-4 py-2.5 text-base text-foreground">
+            {GREETING}
           </div>
-        ))}
-        {thinking && (
-          <div className="text-sm text-muted-foreground">सोच रहा हूँ…</div>
+        </div>
+
+        {messages.map((m) => {
+          const text = m.parts
+            .filter((p) => p.type === "text")
+            .map((p) => ("text" in p ? p.text : ""))
+            .join("");
+          const activeTool = m.parts.find(
+            (p) => p.type.startsWith("tool-") && TOOL_LABELS[p.type],
+          );
+
+          return (
+            <div
+              key={m.id}
+              className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
+            >
+              {m.role === "user" ? (
+                <div className="max-w-[85%] rounded-2xl rounded-br-md bg-primary px-4 py-2.5 text-base text-primary-foreground">
+                  {text}
+                </div>
+              ) : (
+                <div className="max-w-[92%] space-y-1.5">
+                  {activeTool && !text && (
+                    <div className="text-sm text-muted-foreground">
+                      {TOOL_LABELS[activeTool.type]}
+                    </div>
+                  )}
+                  {text && (
+                    <div className="prose prose-sm max-w-none rounded-2xl rounded-bl-md bg-muted px-4 py-2.5 text-base text-foreground prose-p:my-1 prose-ul:my-1 prose-strong:text-foreground">
+                      <ReactMarkdown>{text}</ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {status === "submitted" && <div className="text-sm text-muted-foreground">सोच रहा हूँ…</div>}
+        {error && (
+          <div className="rounded-2xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+            जवाब नहीं मिल पाया। कृपया दोबारा कोशिश करें।
+          </div>
         )}
         <div ref={endRef} />
       </div>
@@ -65,7 +100,8 @@ export function ChatAssistant() {
           <button
             key={q}
             onClick={() => ask(q)}
-            className="rounded-full border border-primary/30 bg-leaf-soft px-3 py-1.5 text-sm text-secondary-foreground transition-colors hover:bg-secondary"
+            disabled={isLoading}
+            className="rounded-full border border-primary/30 bg-leaf-soft px-3 py-1.5 text-sm text-secondary-foreground transition-colors hover:bg-secondary disabled:opacity-50"
           >
             {q}
           </button>
@@ -88,15 +124,16 @@ export function ChatAssistant() {
         />
         <button
           type="submit"
+          disabled={isLoading}
           aria-label="भेजें"
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity hover:opacity-90"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           <Send className="h-5 w-5" />
         </button>
       </form>
 
       <p className="mt-3 text-xs text-muted-foreground">
-        यह एक प्रोटोटाइप है — दी गई जानकारी डेमो डेटा पर आधारित है, पेशेवर कृषि सलाह नहीं।
+        मौसम असली (Open-Meteo) है, मंडी भाव अभी डेमो डेटा है। यह पेशेवर कृषि सलाह नहीं है।
       </p>
     </section>
   );
