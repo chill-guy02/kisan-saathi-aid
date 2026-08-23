@@ -1,24 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Dashboard } from "@/components/kisan/Dashboard";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "किसान साथी — खेती का डिजिटल साथी | Kisan Saathi" },
+      {
+        name: "description",
+        content:
+          "किसान साथी: मौसम, मंडी भाव और खेती की लागत की जानकारी एक जगह, हिंदी में। डेमो प्रोटोटाइप।",
+      },
+      { property: "og:title", content: "किसान साथी — Kisan Saathi" },
+      {
+        property: "og:description",
+        content: "आपकी खेती का आसान डिजिटल साथी — मौसम, मंडी भाव, लागत कैलकुलेटर और चैट सहायक।",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Dashboard,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
