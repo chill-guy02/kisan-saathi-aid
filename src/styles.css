@@ -150,3 +150,11 @@
     color: var(--color-foreground);
   }
 }
+
+@theme inline {
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-leaf-soft: var(--leaf-soft);
+}
