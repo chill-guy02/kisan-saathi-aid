@@ -48,7 +48,7 @@ export function WeatherCard() {
       <p className="mt-3 text-xs text-muted-foreground">
         {isError
           ? "लाइव मौसम नहीं मिल सका — डेमो डेटा दिखाया जा रहा है।"
-          : "स्रोत: Open-Meteo (कल का पूर्वानुमान)"}
+          : "स्रोत: Open-Meteo (आज का पूर्वानुमान)"}
       </p>
     </section>
   );
