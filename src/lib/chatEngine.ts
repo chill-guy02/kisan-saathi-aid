@@ -35,7 +35,7 @@ function detectCrop(t: string): Crop {
 
 function detectAcres(t: string): number {
   const m = t.match(/(\d+(\.\d+)?)\s*(एकड़|acre)/) ?? t.match(/(\d+(\.\d+)?)/);
-  const n = m ? parseFloat(m[1]) : farmerProfile.landAcres;
+  const n = m ? parseFloat(m[1] as string) : farmerProfile.landAcres;
   return Math.min(20, Math.max(1, n));
 }
 
