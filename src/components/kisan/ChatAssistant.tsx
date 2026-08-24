@@ -61,7 +61,7 @@ export function ChatAssistant() {
       <div className="mt-4 max-h-96 space-y-3 overflow-y-auto pr-1">
         <div className="flex justify-start">
           <div className="max-w-[92%] rounded-2xl rounded-bl-md bg-muted px-4 py-2.5 text-base text-foreground">
-            {GREETING}
+            {greeting}
           </div>
         </div>
 
