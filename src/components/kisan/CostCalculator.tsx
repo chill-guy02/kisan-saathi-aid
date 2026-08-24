@@ -1,18 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   calculateCost,
   costHeadLabels,
   cropLabels,
-  farmerProfile,
   formatINR,
   type Crop,
 } from "@/data/demoData";
+import { useProfile } from "@/lib/profile";
 
 const crops: Crop[] = ["Wheat", "Rice", "Soybean"];
 
 export function CostCalculator() {
-  const [crop, setCrop] = useState<Crop>(farmerProfile.crop);
-  const [acres, setAcres] = useState(farmerProfile.landAcres);
+  const { profile } = useProfile();
+  const [crop, setCrop] = useState<Crop>(profile.crop);
+  const [acres, setAcres] = useState(profile.acres);
+
+  // Follow the farmer profile whenever it changes.
+  useEffect(() => {
+    setCrop(profile.crop);
+    setAcres(profile.acres);
+  }, [profile.crop, profile.acres]);
+
   const { heads, total } = calculateCost(crop, acres);
 
   return (
