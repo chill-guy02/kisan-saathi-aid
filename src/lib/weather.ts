@@ -24,9 +24,9 @@ function interpret(rainProb: number, rainMm: number): string {
   return "आज मौसम साफ रहने की संभावना है।";
 }
 
-export async function fetchWeather(): Promise<Weather> {
+export async function fetchWeather(coords: { lat: number; lon: number } = RAIPUR): Promise<Weather> {
   const url =
-    `https://api.open-meteo.com/v1/forecast?latitude=${RAIPUR.lat}&longitude=${RAIPUR.lon}` +
+    `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}` +
     `&daily=temperature_2m_max,precipitation_probability_max,precipitation_sum` +
     `&hourly=relative_humidity_2m&timezone=Asia%2FKolkata&forecast_days=2`;
 

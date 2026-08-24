@@ -2,11 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { CloudRain, Droplets, Thermometer, Umbrella } from "lucide-react";
 import { weatherDemo } from "@/data/demoData";
 import { fetchWeather } from "@/lib/weather";
+import { useProfileLocation } from "@/lib/profile";
 
 export function WeatherCard() {
+  const loc = useProfileLocation();
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["weather", "raipur"],
-    queryFn: fetchWeather,
+    queryKey: ["weather", loc.id],
+    queryFn: () => fetchWeather({ lat: loc.lat, lon: loc.lon }),
     staleTime: 30 * 60 * 1000,
     retry: 1,
   });
@@ -23,7 +26,7 @@ export function WeatherCard() {
   return (
     <section id="weather" className="rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
       <header className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-xl font-bold">🌦️ मौसम — रायपुर</h2>
+        <h2 className="flex items-center gap-2 text-xl font-bold">🌦️ मौसम — {loc.hi}</h2>
         <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
           {isLoading ? "लोड हो रहा है…" : w.live ? "लाइव डेटा" : "Demo data"}
         </span>

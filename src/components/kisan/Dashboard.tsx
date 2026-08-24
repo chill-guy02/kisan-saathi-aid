@@ -3,6 +3,7 @@ import { WeatherCard } from "./WeatherCard";
 import { MarketPriceCard } from "./MarketPriceCard";
 import { CostCalculator } from "./CostCalculator";
 import { ChatAssistant } from "./ChatAssistant";
+import { ProfileProvider } from "@/lib/profile";
 
 const quickActions = [
   { label: "🌦️ मौसम", target: "weather" },
@@ -16,27 +17,29 @@ export function Dashboard() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pb-12 pt-4">
-      <FarmerProfile />
+    <ProfileProvider>
+      <main className="mx-auto w-full max-w-3xl px-4 pb-12 pt-4">
+        <FarmerProfile />
 
-      <nav className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {quickActions.map((a) => (
-          <button
-            key={a.target}
-            onClick={() => scrollTo(a.target)}
-            className="rounded-2xl border bg-card px-3 py-3 text-base font-semibold shadow-[var(--shadow-card)] transition-colors hover:bg-muted"
-          >
-            {a.label}
-          </button>
-        ))}
-      </nav>
+        <nav className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {quickActions.map((a) => (
+            <button
+              key={a.target}
+              onClick={() => scrollTo(a.target)}
+              className="rounded-2xl border bg-card px-3 py-3 text-base font-semibold shadow-[var(--shadow-card)] transition-colors hover:bg-muted"
+            >
+              {a.label}
+            </button>
+          ))}
+        </nav>
 
-      <div className="mt-4 space-y-4">
-        <WeatherCard />
-        <MarketPriceCard />
-        <CostCalculator />
-        <ChatAssistant />
-      </div>
-    </main>
+        <div className="mt-4 space-y-4">
+          <WeatherCard />
+          <MarketPriceCard />
+          <CostCalculator />
+          <ChatAssistant />
+        </div>
+      </main>
+    </ProfileProvider>
   );
 }
