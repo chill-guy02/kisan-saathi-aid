@@ -7,18 +7,27 @@ import {
   cropLabels,
   farmerProfile,
   formatINR,
-  marketDemo,
+  marketPrices,
   type Crop,
 } from "@/data/demoData";
 import { RAIPUR } from "@/lib/weather";
 
-type ChatRequestBody = { messages?: unknown };
+type ChatProfile = {
+  name?: string;
+  crop?: Crop;
+  acres?: number;
+  locationHi?: string;
+  lat?: number;
+  lon?: number;
+};
+
+type ChatRequestBody = { messages?: unknown; profile?: ChatProfile };
 
 const cropEnum = z.enum(["Wheat", "Rice", "Soybean"]);
 
-async function getForecast(days: number) {
+async function getForecast(days: number, lat: number, lon: number) {
   const url =
-    `https://api.open-meteo.com/v1/forecast?latitude=${RAIPUR.lat}&longitude=${RAIPUR.lon}` +
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
     `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max` +
     `&timezone=Asia%2FKolkata&forecast_days=${days}`;
   const res = await fetch(url);
@@ -47,7 +56,7 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { messages } = (await request.json()) as ChatRequestBody;
+        const { messages, profile } = (await request.json()) as ChatRequestBody;
         if (!Array.isArray(messages)) {
           return new Response("Messages are required", { status: 400 });
         }
@@ -56,6 +65,15 @@ export const Route = createFileRoute("/api/chat")({
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
 
         const gateway = createLovableAiGatewayProvider(key);
+
+        const farmer = {
+          name: profile?.name || farmerProfile.nameHi,
+          crop: (profile?.crop ?? farmerProfile.crop) as Crop,
+          acres: profile?.acres ?? farmerProfile.landAcres,
+          locationHi: profile?.locationHi || farmerProfile.locationHi,
+          lat: profile?.lat ?? RAIPUR.lat,
+          lon: profile?.lon ?? RAIPUR.lon,
+        };
 
         const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 
@@ -69,7 +87,8 @@ export const Route = createFileRoute("/api/chat")({
 - अगर जानकारी उपलब्ध न हो तो साफ़ कहें और नज़दीकी कृषि विज्ञान केंद्र से संपर्क करने को कहें।
 - कीटनाशक/दवा की सटीक मात्रा बताते समय चेतावनी दें कि लेबल पढ़ें।
 
-किसान की जानकारी: नाम ${farmerProfile.nameHi}, स्थान ${farmerProfile.locationHi}, मुख्य फसल ${farmerProfile.cropHi}, ज़मीन ${farmerProfile.landAcres} एकड़।
+किसान की जानकारी: नाम ${farmer.name}, स्थान ${farmer.locationHi}, मुख्य फसल ${cropLabels[farmer.crop]}, ज़मीन ${farmer.acres} एकड़।
+अगर किसान फसल या एकड़ न बताए तो यही जानकारी इस्तेमाल करें।
 आज की तारीख: ${today} (IST)।`;
 
         const result = streamText({
@@ -79,33 +98,38 @@ export const Route = createFileRoute("/api/chat")({
           stopWhen: stepCountIs(50),
           tools: {
             getWeather: tool({
-              description:
-                "रायपुर का असली मौसम पूर्वानुमान (Open-Meteo). आज और आने वाले दिनों का तापमान, बारिश की संभावना, वर्षा और हवा।",
+              description: `${farmer.locationHi} का असली मौसम पूर्वानुमान (Open-Meteo). आज और आने वाले दिनों का तापमान, बारिश की संभावना, वर्षा और हवा।`,
               inputSchema: z.object({
                 days: z.number().describe("कितने दिन का पूर्वानुमान चाहिए (1-7)"),
               }),
               execute: async ({ days }) => {
                 const d = Math.min(7, Math.max(1, Math.round(days || 2)));
-                return { location: farmerProfile.locationHi, daily: await getForecast(d) };
+                return {
+                  location: farmer.locationHi,
+                  daily: await getForecast(d, farmer.lat, farmer.lon),
+                };
               },
             }),
             getMandiPrice: tool({
               description: "नज़दीकी मंडी में फसल का भाव (प्रति क्विंटल). अभी डेमो डेटा।",
               inputSchema: z.object({ crop: cropEnum }),
-              execute: async ({ crop }) => ({
-                crop: cropLabels[crop as Crop],
-                mandi: marketDemo.mandiHi,
-                minPerQuintal: marketDemo.min,
-                maxPerQuintal: marketDemo.max,
-                modalPerQuintal: marketDemo.modal,
-                note: "डेमो डेटा (Agmarknet/eNAM API से बदला जाएगा)",
-              }),
+              execute: async ({ crop }) => {
+                const p = marketPrices[crop as Crop];
+                return {
+                  crop: cropLabels[crop as Crop],
+                  mandi: farmer.locationHi,
+                  minPerQuintal: p.min,
+                  maxPerQuintal: p.max,
+                  modalPerQuintal: p.modal,
+                  note: "डेमो डेटा (Agmarknet/eNAM API से बदला जाएगा)",
+                };
+              },
             }),
             calculateFarmCost: tool({
               description: "फसल और एकड़ के हिसाब से खेती की अनुमानित लागत (बीज, खाद, मजदूरी आदि)।",
               inputSchema: z.object({ crop: cropEnum, acres: z.number() }),
               execute: async ({ crop, acres }) => {
-                const a = Math.min(50, Math.max(0.5, acres || farmerProfile.landAcres));
+                const a = Math.min(50, Math.max(0.5, acres || farmer.acres));
                 const { heads, total } = calculateCost(crop as Crop, a);
                 return {
                   crop: cropLabels[crop as Crop],

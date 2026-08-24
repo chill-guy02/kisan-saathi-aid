@@ -4,9 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { suggestedQuestions } from "@/lib/chatEngine";
-
-const GREETING =
-  "नमस्ते रमेश जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।";
+import { useProfile, useProfileLocation } from "@/lib/profile";
 
 const TOOL_LABELS: Record<string, string> = {
   "tool-getWeather": "मौसम देख रहा हूँ…",
@@ -17,11 +15,14 @@ const TOOL_LABELS: Record<string, string> = {
 export function ChatAssistant() {
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
+  const { profile } = useProfile();
+  const loc = useProfileLocation();
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
 
   const { messages, sendMessage, status, error } = useChat({ transport });
 
   const isLoading = status === "submitted" || status === "streaming";
+  const greeting = `नमस्ते ${profile.name} जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।`;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -31,7 +32,21 @@ export function ChatAssistant() {
     const q = question.trim();
     if (!q || isLoading) return;
     setInput("");
-    void sendMessage({ text: q });
+    void sendMessage(
+      { text: q },
+      {
+        body: {
+          profile: {
+            name: profile.name,
+            crop: profile.crop,
+            acres: profile.acres,
+            locationHi: loc.hi,
+            lat: loc.lat,
+            lon: loc.lon,
+          },
+        },
+      },
+    );
   };
 
   return (
@@ -46,7 +61,7 @@ export function ChatAssistant() {
       <div className="mt-4 max-h-96 space-y-3 overflow-y-auto pr-1">
         <div className="flex justify-start">
           <div className="max-w-[92%] rounded-2xl rounded-bl-md bg-muted px-4 py-2.5 text-base text-foreground">
-            {GREETING}
+            {greeting}
           </div>
         </div>
 

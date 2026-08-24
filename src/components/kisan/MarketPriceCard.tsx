@@ -1,10 +1,15 @@
-import { formatINR, marketDemo } from "@/data/demoData";
+import { cropLabels, formatINR, marketPrices } from "@/data/demoData";
+import { useProfile, useProfileLocation } from "@/lib/profile";
 
 export function MarketPriceCard() {
+  const { profile } = useProfile();
+  const loc = useProfileLocation();
+  const price = marketPrices[profile.crop];
+
   const rows = [
-    { label: "न्यूनतम", value: marketDemo.min, tone: "bg-muted" },
-    { label: "अधिकतम", value: marketDemo.max, tone: "bg-muted" },
-    { label: "मॉडल भाव", value: marketDemo.modal, tone: "bg-gold-soft" },
+    { label: "न्यूनतम", value: price.min, tone: "bg-muted" },
+    { label: "अधिकतम", value: price.max, tone: "bg-muted" },
+    { label: "मॉडल भाव", value: price.modal, tone: "bg-gold-soft" },
   ];
 
   return (
@@ -17,7 +22,7 @@ export function MarketPriceCard() {
       </header>
 
       <p className="mt-2 text-sm text-muted-foreground">
-        फसल: {marketDemo.cropHi} · मंडी: {marketDemo.mandiHi}
+        फसल: {cropLabels[profile.crop]} · मंडी: {loc.hi}
       </p>
 
       <div className="mt-4 space-y-2">
