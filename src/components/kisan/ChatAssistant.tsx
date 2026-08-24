@@ -15,11 +15,14 @@ const TOOL_LABELS: Record<string, string> = {
 export function ChatAssistant() {
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
+  const { profile } = useProfile();
+  const loc = useProfileLocation();
   const transport = useMemo(() => new DefaultChatTransport({ api: "/api/chat" }), []);
 
   const { messages, sendMessage, status, error } = useChat({ transport });
 
   const isLoading = status === "submitted" || status === "streaming";
+  const greeting = `नमस्ते ${profile.name} जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।`;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -29,7 +32,21 @@ export function ChatAssistant() {
     const q = question.trim();
     if (!q || isLoading) return;
     setInput("");
-    void sendMessage({ text: q });
+    void sendMessage(
+      { text: q },
+      {
+        body: {
+          profile: {
+            name: profile.name,
+            crop: profile.crop,
+            acres: profile.acres,
+            locationHi: loc.hi,
+            lat: loc.lat,
+            lon: loc.lon,
+          },
+        },
+      },
+    );
   };
 
   return (
