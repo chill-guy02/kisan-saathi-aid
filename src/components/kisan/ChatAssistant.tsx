@@ -4,9 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { suggestedQuestions } from "@/lib/chatEngine";
-
-const GREETING =
-  "नमस्ते रमेश जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।";
+import { useProfile, useProfileLocation } from "@/lib/profile";
 
 const TOOL_LABELS: Record<string, string> = {
   "tool-getWeather": "मौसम देख रहा हूँ…",
