@@ -10,6 +10,9 @@ const TOOL_LABELS: Record<string, string> = {
   "tool-getWeather": "मौसम देख रहा हूँ…",
   "tool-getMandiPrice": "मंडी भाव देख रहा हूँ…",
   "tool-calculateFarmCost": "लागत जोड़ रहा हूँ…",
+  "tool-getCollectiveSale": "किसान समूह की बिक्री देख रहा हूँ…",
+  "tool-getCollectiveBuy": "सामूहिक खरीद देख रहा हूँ…",
+  "tool-getCollectiveStorage": "भंडारण विकल्प देख रहा हूँ…",
 };
 
 export function ChatAssistant() {

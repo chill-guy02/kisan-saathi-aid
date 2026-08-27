@@ -11,6 +11,14 @@ import {
   type Crop,
 } from "@/data/demoData";
 import { RAIPUR } from "@/lib/weather";
+import {
+  bulkProcurement,
+  collectiveSales,
+  extraRealization,
+  QUINTALS_PER_ACRE,
+  storageOptions,
+  storageSummary,
+} from "@/data/collectiveData";
 
 type ChatProfile = {
   name?: string;
@@ -86,6 +94,8 @@ export const Route = createFileRoute("/api/chat")({
 - सलाह देते समय कारण बताएँ (जैसे "कल 70% बारिश है, इसलिए आज यूरिया न डालें")।
 - अगर जानकारी उपलब्ध न हो तो साफ़ कहें और नज़दीकी कृषि विज्ञान केंद्र से संपर्क करने को कहें।
 - कीटनाशक/दवा की सटीक मात्रा बताते समय चेतावनी दें कि लेबल पढ़ें।
+- सामूहिक बिक्री / सामूहिक खरीद / सामूहिक भंडारण (किसान समूह) के सवालों पर getCollectiveSale, getCollectiveBuy या getCollectiveStorage tool चलाएँ। किसानों की संख्या, मात्रा, भाव या बचत के आंकड़े कभी खुद से न बनाएँ — केवल tool से मिले आंकड़े इस्तेमाल करें।
+- "अभी बेचूं या रुकूं/store करूं" जैसे सवाल पर मंडी भाव, सामूहिक भाव और भंडारण खर्च की तुलना करके आसान सलाह दें।
 
 किसान की जानकारी: नाम ${farmer.name}, स्थान ${farmer.locationHi}, मुख्य फसल ${cropLabels[farmer.crop]}, ज़मीन ${farmer.acres} एकड़।
 अगर किसान फसल या एकड़ न बताए तो यही जानकारी इस्तेमाल करें।
@@ -124,6 +134,61 @@ export const Route = createFileRoute("/api/chat")({
                   note: "डेमो डेटा (Agmarknet/eNAM API से बदला जाएगा)",
                 };
               },
+            }),
+            getCollectiveSale: tool({
+              description:
+                "किसान समूह की सामूहिक बिक्री की जानकारी: कितने किसान तैयार हैं, कुल मात्रा, अभी का मंडी भाव और संभावित सामूहिक भाव (डेमो डेटा)।",
+              inputSchema: z.object({ crop: cropEnum }),
+              execute: async ({ crop }) => {
+                const s = collectiveSales[crop as Crop];
+                const myQuintals = Math.round(farmer.acres * QUINTALS_PER_ACRE);
+                return {
+                  crop: s.cropHi,
+                  farmerCount: s.farmerCount,
+                  combinedLandAcres: s.combinedLandAcres,
+                  quantityQuintals: s.quantityQuintals,
+                  targetQuintals: s.targetQuintals,
+                  currentMarketPricePerQuintal: s.currentMarketPrice,
+                  potentialCollectivePricePerQuintal: s.potentialCollectivePrice,
+                  yourEstimatedQuintals: myQuintals,
+                  yourEstimatedExtraEarning: extraRealization(crop as Crop, myQuintals),
+                  note: "डेमो/अनुमानित आंकड़े",
+                };
+              },
+            }),
+            getCollectiveBuy: tool({
+              description:
+                "सामूहिक खरीद (bulk procurement) की जानकारी: खाद/बीज की कुल ज़रूरत, अकेले का भाव, bulk भाव और अनुमानित बचत (डेमो डेटा)।",
+              inputSchema: z.object({}),
+              execute: async () => ({
+                items: bulkProcurement.map((b) => ({
+                  input: b.inputHi,
+                  farmerCount: b.farmerCount,
+                  quantityBags: b.quantityBags,
+                  individualPricePerBag: b.individualPrice,
+                  estimatedBulkPricePerBag: b.estimatedBulkPrice,
+                  savingPerBag: b.individualPrice - b.estimatedBulkPrice,
+                })),
+                note: "Demo estimate — final price depends on supplier quotation.",
+              }),
+            }),
+            getCollectiveStorage: tool({
+              description:
+                "सामूहिक भंडारण की जानकारी: उपलब्ध क्षमता, समूह की ज़रूरत, भंडारण खर्च और भंडार विकल्प (डेमो डेटा)।",
+              inputSchema: z.object({}),
+              execute: async () => ({
+                availableCapacityQuintals: storageSummary.availableCapacityQuintals,
+                groupRequirementQuintals: storageSummary.groupRequirementQuintals,
+                costPerQuintalPerMonth: storageSummary.estimatedCostPerQuintalMonth,
+                utilizationPct: storageSummary.utilizationPct,
+                options: storageOptions.map((s) => ({
+                  name: s.nameHi,
+                  capacityQuintals: s.capacityQuintals,
+                  distanceKm: s.distanceKm,
+                  costPerQuintalPerMonth: s.estimatedCostPerQuintalMonth,
+                })),
+                note: "डेमो डेटा",
+              }),
             }),
             calculateFarmCost: tool({
               description: "फसल और एकड़ के हिसाब से खेती की अनुमानित लागत (बीज, खाद, मजदूरी आदि)।",
