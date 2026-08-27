@@ -1,28 +1,31 @@
 import { cropLabels, formatINR, marketPrices } from "@/data/demoData";
 import { useProfile, useProfileLocation } from "@/lib/profile";
+import { useLang, pick } from "@/lib/i18n";
 
 export function MarketPriceCard() {
+  const { lang } = useLang();
   const { profile } = useProfile();
   const loc = useProfileLocation();
   const price = marketPrices[profile.crop];
 
   const rows = [
-    { label: "न्यूनतम", value: price.min, tone: "bg-muted" },
-    { label: "अधिकतम", value: price.max, tone: "bg-muted" },
-    { label: "मॉडल भाव", value: price.modal, tone: "bg-gold-soft" },
+    { label: pick(lang, "न्यूनतम", "Minimum"), value: price.min, tone: "bg-muted" },
+    { label: pick(lang, "अधिकतम", "Maximum"), value: price.max, tone: "bg-muted" },
+    { label: pick(lang, "मॉडल भाव", "Modal price"), value: price.modal, tone: "bg-gold-soft" },
   ];
 
   return (
     <section id="market" className="rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
       <header className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-xl font-bold">🌾 मंडी भाव</h2>
-        <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-          Demo data
-        </span>
+        <h2 className="flex items-center gap-2 text-xl font-bold">
+          🌾 {pick(lang, "मंडी भाव", "Mandi Price")}
+        </h2>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">Demo data</span>
       </header>
 
       <p className="mt-2 text-sm text-muted-foreground">
-        फसल: {cropLabels[profile.crop]} · मंडी: {loc.hi}
+        {pick(lang, "फसल", "Crop")}: {pick(lang, cropLabels[profile.crop], profile.crop)} ·{" "}
+        {pick(lang, "मंडी", "Mandi")}: {pick(lang, loc.hi, loc.en)}
       </p>
 
       <div className="mt-4 space-y-2">
@@ -34,7 +37,9 @@ export function MarketPriceCard() {
             <span className="text-base font-medium">{r.label}</span>
             <span className="text-xl font-bold">
               {formatINR(r.value)}
-              <span className="text-sm font-normal text-muted-foreground">/क्विंटल</span>
+              <span className="text-sm font-normal text-muted-foreground">
+                {pick(lang, "/क्विंटल", "/quintal")}
+              </span>
             </span>
           </div>
         ))}

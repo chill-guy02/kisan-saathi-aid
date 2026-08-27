@@ -11,13 +11,20 @@ import {
 } from "@/data/collectiveData";
 import { formatINR } from "@/data/demoData";
 import { useProfile } from "@/lib/profile";
+import { useLang, pick } from "@/lib/i18n";
 import { Stat } from "./CollectiveHighlight";
 
-const DemoTag = ({ text = "Demo / Estimated" }: { text?: string }) => (
-  <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">{text}</span>
-);
+function DemoTag({ text }: { text?: string }) {
+  const { lang } = useLang();
+  return (
+    <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+      {text ?? pick(lang, "डेमो / अनुमानित", "Demo / Estimated")}
+    </span>
+  );
+}
 
 export function CollectivePage() {
+  const { lang } = useLang();
   const { profile } = useProfile();
   const sale = collectiveSales[profile.crop];
   const myQuintals = Math.round(profile.acres * QUINTALS_PER_ACRE);
@@ -28,17 +35,17 @@ export function CollectivePage() {
   const fert = bulkProcurement[0]!;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pb-12 pt-4">
+    <main className="mx-auto w-full max-w-3xl px-4 pb-12 pt-16">
       <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-        <ArrowLeft className="h-4 w-4" /> डैशबोर्ड
+        <ArrowLeft className="h-4 w-4" /> {pick(lang, "डैशबोर्ड", "Dashboard")}
       </Link>
 
       <header className="mt-3">
         <h1 className="flex items-center gap-2 text-2xl font-bold">
-          <Handshake className="h-7 w-7 text-primary" /> किसान समूह
+          <Handshake className="h-7 w-7 text-primary" /> {pick(lang, "किसान समूह", "Kisan Collective")}
         </h1>
         <p className="mt-1 text-base text-muted-foreground">
-          मिलकर खरीदें, बेचें और भंडारण करें। <span className="text-sm">(Kisan Collective)</span>
+          {pick(lang, "मिलकर खरीदें, बेचें और भंडारण करें।", "Buy, sell, and store together.")}
         </p>
       </header>
 
@@ -54,39 +61,49 @@ export function CollectivePage() {
             className="rounded-3xl border bg-card p-4 shadow-[var(--shadow-card)] transition-colors hover:bg-muted"
           >
             <div className="text-2xl">{c.icon}</div>
-            <div className="mt-1 text-lg font-bold">{c.hi}</div>
+            <div className="mt-1 text-lg font-bold">{pick(lang, c.hi, c.en)}</div>
             <div className="text-xs text-muted-foreground">{c.en}</div>
           </a>
         ))}
       </div>
 
-      {/* A. सामूहिक बिक्री */}
+      {/* A. Collective Sale */}
       <section id="sell" className="mt-4 rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
         <header className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <PackageOpen className="h-5 w-5 text-primary" /> सामूहिक बिक्री
+            <PackageOpen className="h-5 w-5 text-primary" />{" "}
+            {pick(lang, "सामूहिक बिक्री", "Collective Sale")}
           </h2>
           <DemoTag />
         </header>
         <p className="mt-2 text-base">
-          {sale.farmerCount} किसान {sale.cropHi} बेचने के लिए तैयार हैं।
+          {lang === "hi"
+            ? `${sale.farmerCount} किसान ${sale.cropHi} बेचने के लिए तैयार हैं।`
+            : `${sale.farmerCount} farmers are ready to sell ${sale.crop}.`}
         </p>
 
         <div className="mt-4 grid grid-cols-3 gap-2">
-          <Stat value={String(sale.farmerCount)} label="किसान" />
-          <Stat value={String(sale.combinedLandAcres)} label="एकड़" />
-          <Stat value={String(sale.quantityQuintals)} label="क्विंटल" />
+          <Stat value={String(sale.farmerCount)} label={pick(lang, "किसान", "Farmers")} />
+          <Stat value={String(sale.combinedLandAcres)} label={pick(lang, "एकड़", "Acres")} />
+          <Stat value={String(sale.quantityQuintals)} label={pick(lang, "क्विंटल", "Quintals")} />
         </div>
 
         <div className="mt-4 space-y-2">
-          <Row label="अभी मंडी भाव (अकेले)" value={`${formatINR(sale.currentMarketPrice)}/क्विंटल`} />
           <Row
-            label="संभावित सामूहिक भाव"
-            value={`${formatINR(sale.potentialCollectivePrice)}/क्विंटल`}
+            label={pick(lang, "अभी मंडी भाव (अकेले)", "Current mandi price (alone)")}
+            value={`${formatINR(sale.currentMarketPrice)}${pick(lang, "/क्विंटल", "/quintal")}`}
+          />
+          <Row
+            label={pick(lang, "संभावित सामूहिक भाव", "Potential collective price")}
+            value={`${formatINR(sale.potentialCollectivePrice)}${pick(lang, "/क्विंटल", "/quintal")}`}
             highlight
           />
           <Row
-            label={`आपकी अनुमानित उपज (${myQuintals} क्विंटल) पर संभावित अतिरिक्त कमाई`}
+            label={pick(
+              lang,
+              `आपकी अनुमानित उपज (${myQuintals} क्विंटल) पर संभावित अतिरिक्त कमाई`,
+              `Estimated extra earning (${myQuintals} quintals)`,
+            )}
             value={formatINR(extraRealization(profile.crop, myQuintals))}
             highlight
           />
@@ -94,9 +111,9 @@ export function CollectivePage() {
 
         <div className="mt-4">
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>लक्ष्य की ओर</span>
+            <span>{pick(lang, "लक्ष्य की ओर", "Towards target")}</span>
             <span>
-              {sale.quantityQuintals} / {sale.targetQuintals} क्विंटल
+              {sale.quantityQuintals} / {sale.targetQuintals} {pick(lang, "क्विंटल", "quintals")}
             </span>
           </div>
           <div className="mt-1 h-3 w-full overflow-hidden rounded-full bg-muted">
@@ -112,43 +129,67 @@ export function CollectivePage() {
           disabled={joined}
           className="mt-4 h-12 w-full rounded-2xl bg-primary text-base font-semibold text-primary-foreground disabled:opacity-60"
         >
-          सामूहिक बिक्री में शामिल हों
+          {pick(lang, "सामूहिक बिक्री में शामिल हों", "Join collective sale")}
         </button>
         {joined && (
           <p className="mt-3 rounded-2xl bg-leaf-soft px-4 py-3 text-base">
-            ✅ आप सामूहिक बिक्री सूची में शामिल हो गए हैं।
+            {pick(
+              lang,
+              "✅ आप सामूहिक बिक्री सूची में शामिल हो गए हैं।",
+              "✅ You have joined the collective sale list.",
+            )}
           </p>
         )}
       </section>
 
-      {/* B. सामूहिक खरीद */}
+      {/* B. Collective Buy */}
       <section id="buy" className="mt-4 rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
         <header className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <ShoppingCart className="h-5 w-5 text-primary" /> सामूहिक खरीद
+            <ShoppingCart className="h-5 w-5 text-primary" />{" "}
+            {pick(lang, "सामूहिक खरीद", "Collective Buy")}
           </h2>
           <DemoTag />
         </header>
         <p className="mt-2 text-base text-muted-foreground">
-          मिलकर खरीदें और बेहतर bulk price पाने की कोशिश करें।
+          {pick(
+            lang,
+            "मिलकर खरीदें और बेहतर bulk price पाने की कोशिश करें।",
+            "Buy together and try to get a better bulk price.",
+          )}
         </p>
 
         {bulkProcurement.map((b) => (
           <div key={b.input} className="mt-4 rounded-2xl bg-muted/50 p-4">
-            <p className="text-base font-semibold">{b.inputHi}</p>
+            <p className="text-base font-semibold">{pick(lang, b.inputHi, b.input)}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              {b.farmerCount} किसानों को कुल लगभग {b.quantityBags} बोरी की ज़रूरत।
+              {lang === "hi"
+                ? `${b.farmerCount} किसानों को कुल लगभग ${b.quantityBags} बोरी की ज़रूरत।`
+                : `${b.farmerCount} farmers need about ${b.quantityBags} bags total.`}
             </p>
             <div className="mt-3 grid grid-cols-3 gap-2">
-              <Stat value={formatINR(b.individualPrice)} label="अकेले भाव/बोरी" />
-              <Stat value={formatINR(b.estimatedBulkPrice)} label="bulk भाव/बोरी" />
-              <Stat value={formatINR(b.individualPrice - b.estimatedBulkPrice)} label="बचत/बोरी" />
+              <Stat
+                value={formatINR(b.individualPrice)}
+                label={pick(lang, "अकेले भाव/बोरी", "Individual/bag")}
+              />
+              <Stat
+                value={formatINR(b.estimatedBulkPrice)}
+                label={pick(lang, "bulk भाव/बोरी", "Bulk price/bag")}
+              />
+              <Stat
+                value={formatINR(b.individualPrice - b.estimatedBulkPrice)}
+                label={pick(lang, "बचत/बोरी", "Saving/bag")}
+              />
             </div>
           </div>
         ))}
 
         <p className="mt-3 text-xs text-muted-foreground">
-          Demo estimate — final price depends on supplier quotation.
+          {pick(
+            lang,
+            "डेमो अनुमान — अंतिम भाव आपूर्तिकर्ता के quotation पर निर्भर है।",
+            "Demo estimate — final price depends on supplier quotation.",
+          )}
         </p>
 
         <button
@@ -156,34 +197,43 @@ export function CollectivePage() {
           disabled={quoted}
           className="mt-3 h-12 w-full rounded-2xl bg-primary text-base font-semibold text-primary-foreground disabled:opacity-60"
         >
-          Bulk quotation मांगें
+          {pick(lang, "Bulk quotation मांगें", "Request bulk quotation")}
         </button>
         {quoted && (
           <p className="mt-3 rounded-2xl bg-leaf-soft px-4 py-3 text-base">
-            ✅ Bulk procurement request created. ({fert.inputHi} — {fert.quantityBags} बोरी)
+            {lang === "hi"
+              ? `✅ Bulk procurement request created. (${fert.inputHi} — ${fert.quantityBags} बोरी)`
+              : `✅ Bulk procurement request created. (${fert.input} — ${fert.quantityBags} bags)`}
           </p>
         )}
       </section>
 
-      {/* C. सामूहिक भंडारण */}
+      {/* C. Collective Storage */}
       <section id="store" className="mt-4 rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
         <header className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <Warehouse className="h-5 w-5 text-primary" /> सामूहिक भंडारण
+            <Warehouse className="h-5 w-5 text-primary" />{" "}
+            {pick(lang, "सामूहिक भंडारण", "Collective Storage")}
           </h2>
           <DemoTag text="DEMO DATA" />
         </header>
 
         <div className="mt-4 grid grid-cols-3 gap-2">
-          <Stat value={String(storageSummary.availableCapacityQuintals)} label="क्विंटल क्षमता" />
-          <Stat value={String(storageSummary.groupRequirementQuintals)} label="समूह की ज़रूरत" />
-          <Stat value={`${storageSummary.utilizationPct}%`} label="उपयोग" />
+          <Stat
+            value={String(storageSummary.availableCapacityQuintals)}
+            label={pick(lang, "क्विंटल क्षमता", "Quintal capacity")}
+          />
+          <Stat
+            value={String(storageSummary.groupRequirementQuintals)}
+            label={pick(lang, "समूह की ज़रूरत", "Group need")}
+          />
+          <Stat value={`${storageSummary.utilizationPct}%`} label={pick(lang, "उपयोग", "Usage")} />
         </div>
 
         <div className="mt-3">
           <Row
-            label="अनुमानित भंडारण खर्च"
-            value={`${formatINR(storageSummary.estimatedCostPerQuintalMonth)}/क्विंटल/माह`}
+            label={pick(lang, "अनुमानित भंडारण खर्च", "Estimated storage cost")}
+            value={`${formatINR(storageSummary.estimatedCostPerQuintalMonth)}${pick(lang, "/क्विंटल/माह", "/quintal/month")}`}
           />
         </div>
 
@@ -191,7 +241,7 @@ export function CollectivePage() {
           onClick={() => setShowStorage((s) => !s)}
           className="mt-4 h-12 w-full rounded-2xl border border-primary/40 bg-leaf-soft text-base font-semibold text-secondary-foreground"
         >
-          भंडारण विकल्प देखें
+          {pick(lang, "भंडारण विकल्प देखें", "View storage options")}
         </button>
 
         {showStorage && (
@@ -199,14 +249,18 @@ export function CollectivePage() {
             {storageOptions.map((s) => (
               <div key={s.name} className="rounded-2xl bg-muted/50 p-4">
                 <p className="text-base font-semibold">
-                  {s.nameHi} <span className="text-sm text-muted-foreground">({s.name})</span>
+                  {pick(lang, s.nameHi, s.name)}{" "}
+                  <span className="text-sm text-muted-foreground">({s.name})</span>
                 </p>
                 <div className="mt-2 grid grid-cols-3 gap-2">
-                  <Stat value={String(s.capacityQuintals)} label="क्विंटल क्षमता" />
-                  <Stat value={`${s.distanceKm} km`} label="दूरी" />
+                  <Stat
+                    value={String(s.capacityQuintals)}
+                    label={pick(lang, "क्विंटल क्षमता", "Quintal capacity")}
+                  />
+                  <Stat value={`${s.distanceKm} km`} label={pick(lang, "दूरी", "Distance")} />
                   <Stat
                     value={formatINR(s.estimatedCostPerQuintalMonth)}
-                    label="प्रति क्विंटल/माह"
+                    label={pick(lang, "प्रति क्विंटल/माह", "Per quintal/month")}
                   />
                 </div>
               </div>
@@ -216,7 +270,11 @@ export function CollectivePage() {
       </section>
 
       <p className="mt-4 text-xs text-muted-foreground">
-        सभी आंकड़े डेमो/अनुमानित हैं। यहाँ कोई असली सौदा, भुगतान या अनुबंध नहीं होता।
+        {pick(
+          lang,
+          "सभी आंकड़े डेमो/अनुमानित हैं। यहाँ कोई असली सौदा, भुगतान या अनुबंध नहीं होता।",
+          "All figures are demo/estimated. No real transaction, payment, or contract happens here.",
+        )}
       </p>
     </main>
   );

@@ -3,8 +3,9 @@ import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { suggestedQuestions } from "@/lib/chatEngine";
+import { suggestedQuestionsHi, suggestedQuestionsEn } from "@/lib/chatEngine";
 import { useProfile, useProfileLocation } from "@/lib/profile";
+import { useLang, pick } from "@/lib/i18n";
 
 const TOOL_LABELS: Record<string, string> = {
   "tool-getWeather": "मौसम देख रहा हूँ…",
@@ -16,6 +17,7 @@ const TOOL_LABELS: Record<string, string> = {
 };
 
 export function ChatAssistant() {
+  const { lang } = useLang();
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
   const { profile } = useProfile();
@@ -25,7 +27,11 @@ export function ChatAssistant() {
   const { messages, sendMessage, status, error } = useChat({ transport });
 
   const isLoading = status === "submitted" || status === "streaming";
-  const greeting = `नमस्ते ${profile.name} जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।`;
+  const greeting =
+    lang === "hi"
+      ? `नमस्ते ${profile.name} जी! मौसम, मंडी भाव, खेती की लागत या फसल की सलाह — जो पूछना हो, पूछिए।`
+      : `Hello ${profile.name}! Ask me about weather, mandi prices, farming costs, or crop advice.`;
+  const suggestions = lang === "hi" ? suggestedQuestionsHi : suggestedQuestionsEn;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -55,9 +61,11 @@ export function ChatAssistant() {
   return (
     <section id="chat" className="rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
       <header className="flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-xl font-bold">💬 किसान साथी से पूछें</h2>
+        <h2 className="flex items-center gap-2 text-xl font-bold">
+          💬 {pick(lang, "किसान साथी से पूछें", "Ask Kisan Saathi")}
+        </h2>
         <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-          AI सहायक
+          {pick(lang, "AI सहायक", "AI Assistant")}
         </span>
       </header>
 
@@ -104,17 +112,23 @@ export function ChatAssistant() {
           );
         })}
 
-        {status === "submitted" && <div className="text-sm text-muted-foreground">सोच रहा हूँ…</div>}
+        {status === "submitted" && (
+          <div className="text-sm text-muted-foreground">{pick(lang, "सोच रहा हूँ…", "Thinking…")}</div>
+        )}
         {error && (
           <div className="rounded-2xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
-            जवाब नहीं मिल पाया। कृपया दोबारा कोशिश करें।
+            {pick(
+              lang,
+              "जवाब नहीं मिल पाया। कृपया दोबारा कोशिश करें।",
+              "Could not get a reply. Please try again.",
+            )}
           </div>
         )}
         <div ref={endRef} />
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {suggestedQuestions.map((q) => (
+        {suggestions.map((q) => (
           <button
             key={q}
             onClick={() => ask(q)}
@@ -136,14 +150,14 @@ export function ChatAssistant() {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="अपना सवाल लिखें…"
-          aria-label="अपना सवाल लिखें"
+          placeholder={pick(lang, "अपना सवाल लिखें…", "Type your question…")}
+          aria-label={pick(lang, "अपना सवाल लिखें", "Type your question")}
           className="h-12 flex-1 rounded-2xl border bg-background px-4 text-base outline-none focus:ring-2 focus:ring-ring"
         />
         <button
           type="submit"
           disabled={isLoading}
-          aria-label="भेजें"
+          aria-label={pick(lang, "भेजें", "Send")}
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           <Send className="h-5 w-5" />
@@ -151,7 +165,11 @@ export function ChatAssistant() {
       </form>
 
       <p className="mt-3 text-xs text-muted-foreground">
-        मौसम असली (Open-Meteo) है, मंडी भाव अभी डेमो डेटा है। यह पेशेवर कृषि सलाह नहीं है।
+        {pick(
+          lang,
+          "मौसम असली (Open-Meteo) है, मंडी भाव अभी डेमो डेटा है। यह पेशेवर कृषि सलाह नहीं है।",
+          "Weather is live (Open-Meteo); mandi prices are still demo data. This is not professional agricultural advice.",
+        )}
       </p>
     </section>
   );

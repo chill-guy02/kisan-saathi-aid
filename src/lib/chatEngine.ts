@@ -76,7 +76,7 @@ export function getAnswer(question: string): { intent: Intent; text: string } {
   }
 }
 
-export const suggestedQuestions = [
+export const suggestedQuestionsHi = [
   "कल बारिश होगी क्या?",
   "आज गेहूं का भाव क्या है?",
   "3 एकड़ गेहूं की लागत कितनी होगी?",
@@ -84,4 +84,14 @@ export const suggestedQuestions = [
   "मेरे गांव में और कौन गेहूं बेच रहा है?",
   "खाद सस्ती कैसे मिलेगी?",
   "फसल अभी बेचूं या store करूं?",
+];
+
+export const suggestedQuestionsEn = [
+  "Will it rain tomorrow?",
+  "What is the wheat price today?",
+  "What will 3 acres of wheat cost?",
+  "Rain is coming — should I apply fertilizer?",
+  "Who else is selling wheat nearby?",
+  "How can I get cheaper fertilizer?",
+  "Should I sell now or store my crop?",
 ];

@@ -5,22 +5,24 @@ import { MarketPriceCard } from "./MarketPriceCard";
 import { CostCalculator } from "./CostCalculator";
 import { ChatAssistant } from "./ChatAssistant";
 import { CollectiveHighlight } from "./CollectiveHighlight";
-
-const quickActions = [
-  { label: "🌦️ मौसम", target: "weather" },
-  { label: "🌾 मंडी भाव", target: "market" },
-  { label: "💰 खेती की लागत", target: "cost" },
-  { label: "💬 सवाल पूछें", target: "chat" },
-  { label: "🤝 किसान समूह", target: "collective" },
-  { label: "👨‍🌾 मेरा खेत", target: "profile" },
-];
+import { useLang, pick } from "@/lib/i18n";
 
 export function Dashboard() {
+  const { lang } = useLang();
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
+  const quickActions = [
+    { label: pick(lang, "🌦️ मौसम", "🌦️ Weather"), target: "weather" },
+    { label: pick(lang, "🌾 मंडी भाव", "🌾 Mandi Price"), target: "market" },
+    { label: pick(lang, "💰 खेती की लागत", "💰 Farm Cost"), target: "cost" },
+    { label: pick(lang, "💬 सवाल पूछें", "💬 Ask a Question"), target: "chat" },
+    { label: pick(lang, "🤝 किसान समूह", "🤝 Kisan Collective"), target: "collective" },
+    { label: pick(lang, "👨‍🌾 मेरा खेत", "👨‍🌾 My Farm"), target: "profile" },
+  ];
+
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pb-12 pt-4">
+    <main className="mx-auto w-full max-w-3xl px-4 pb-12 pt-16">
       <div id="profile">
         <FarmerProfile />
       </div>
@@ -38,9 +40,9 @@ export function Dashboard() {
       </nav>
 
       <p className="mt-3 text-center text-sm text-muted-foreground">
-        पहले सही जानकारी → फिर सही फैसला →{" "}
+        {pick(lang, "पहले सही जानकारी → फिर सही फैसला →", "Right info first → then right decision →")}{" "}
         <Link to="/collective" className="font-semibold text-primary underline">
-          फिर मिलकर बेहतर सौदा
+          {pick(lang, "फिर मिलकर बेहतर सौदा", "then a better deal together")}
         </Link>
       </p>
 
