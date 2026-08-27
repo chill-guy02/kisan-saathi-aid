@@ -11,6 +11,14 @@ import {
   type Crop,
 } from "@/data/demoData";
 import { RAIPUR } from "@/lib/weather";
+import {
+  bulkProcurement,
+  collectiveSales,
+  extraRealization,
+  QUINTALS_PER_ACRE,
+  storageOptions,
+  storageSummary,
+} from "@/data/collectiveData";
 
 type ChatProfile = {
   name?: string;
