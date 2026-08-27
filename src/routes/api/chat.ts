@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, stepCountIs, streamText, tool, type UIMessage } from "ai";
 import { z } from "zod";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+import { createGeminiProvider } from "@/lib/ai-gateway.server";
 import {
   calculateCost,
   cropLabels,
@@ -69,10 +69,10 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Messages are required", { status: 400 });
         }
 
-        const key = process.env["LOVABLE_API_KEY"];
-        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+        const key = process.env["GOOGLE_GENERATIVE_AI_API_KEY"];
+        if (!key) return new Response("Missing GOOGLE_GENERATIVE_AI_API_KEY", { status: 500 });
 
-        const gateway = createLovableAiGatewayProvider(key);
+        const google = createGeminiProvider(key);
 
         const farmer = {
           name: profile?.name || farmerProfile.nameHi,
@@ -102,7 +102,7 @@ export const Route = createFileRoute("/api/chat")({
 आज की तारीख: ${today} (IST)।`;
 
         const result = streamText({
-          model: gateway("google/gemini-3.7-flash"),
+          model: google("gemini-2.5-flash"),
           system,
           messages: await convertToModelMessages(messages as UIMessage[]),
           stopWhen: stepCountIs(50),
