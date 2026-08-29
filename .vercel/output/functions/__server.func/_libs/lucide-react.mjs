@@ -128,128 +128,10 @@ var ArrowLeft = createLucideIcon("arrow-left", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var Bot = createLucideIcon("bot", [
-	["path", {
-		d: "M12 8V4H8",
-		key: "hb8ula"
-	}],
-	["rect", {
-		width: "16",
-		height: "12",
-		x: "4",
-		y: "8",
-		rx: "2",
-		key: "enze0r"
-	}],
-	["path", {
-		d: "M2 14h2",
-		key: "vft8re"
-	}],
-	["path", {
-		d: "M20 14h2",
-		key: "4cs60a"
-	}],
-	["path", {
-		d: "M15 13v2",
-		key: "1xurst"
-	}],
-	["path", {
-		d: "M9 13v2",
-		key: "rq6x2g"
-	}]
-]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
-var Calculator = createLucideIcon("calculator", [
-	["rect", {
-		width: "16",
-		height: "20",
-		x: "4",
-		y: "2",
-		rx: "2",
-		key: "1nb95v"
-	}],
-	["line", {
-		x1: "8",
-		x2: "16",
-		y1: "6",
-		y2: "6",
-		key: "x4nwl0"
-	}],
-	["line", {
-		x1: "16",
-		x2: "16",
-		y1: "14",
-		y2: "18",
-		key: "wjye3r"
-	}],
-	["path", {
-		d: "M16 10h.01",
-		key: "1m94wz"
-	}],
-	["path", {
-		d: "M12 10h.01",
-		key: "1nrarc"
-	}],
-	["path", {
-		d: "M8 10h.01",
-		key: "19clt8"
-	}],
-	["path", {
-		d: "M12 14h.01",
-		key: "1etili"
-	}],
-	["path", {
-		d: "M8 14h.01",
-		key: "6423bh"
-	}],
-	["path", {
-		d: "M12 18h.01",
-		key: "mhygvu"
-	}],
-	["path", {
-		d: "M8 18h.01",
-		key: "lrp35t"
-	}]
-]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
 var Check = createLucideIcon("check", [["path", {
 	d: "M20 6 9 17l-5-5",
 	key: "1gmf2c"
 }]]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
-var CircleUser = createLucideIcon("circle-user", [
-	["circle", {
-		cx: "12",
-		cy: "12",
-		r: "10",
-		key: "1mglay"
-	}],
-	["circle", {
-		cx: "12",
-		cy: "10",
-		r: "3",
-		key: "ilqhr7"
-	}],
-	["path", {
-		d: "M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662",
-		key: "154egf"
-	}]
-]);
 /**
 * @license lucide-react v0.575.0 - ISC
 *
@@ -272,38 +154,6 @@ var CloudRain = createLucideIcon("cloud-rain", [
 	["path", {
 		d: "M12 16v6",
 		key: "c8a4gj"
-	}]
-]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
-var CloudSun = createLucideIcon("cloud-sun", [
-	["path", {
-		d: "M12 2v2",
-		key: "tus03m"
-	}],
-	["path", {
-		d: "m4.93 4.93 1.41 1.41",
-		key: "149t6j"
-	}],
-	["path", {
-		d: "M20 12h2",
-		key: "1q8mjw"
-	}],
-	["path", {
-		d: "m19.07 4.93-1.41 1.41",
-		key: "1shlcs"
-	}],
-	["path", {
-		d: "M15.947 12.65a4 4 0 0 0-5.925-4.128",
-		key: "dpwdj0"
-	}],
-	["path", {
-		d: "M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z",
-		key: "s09mg5"
 	}]
 ]);
 /**
@@ -393,16 +243,6 @@ var MapPin = createLucideIcon("map-pin", [["path", {
 	cy: "10",
 	r: "3",
 	key: "ilqhr7"
-}]]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
-var MessageSquare = createLucideIcon("message-square", [["path", {
-	d: "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z",
-	key: "18887p"
 }]]);
 /**
 * @license lucide-react v0.575.0 - ISC
@@ -566,19 +406,6 @@ var Thermometer = createLucideIcon("thermometer", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var TrendingUp = createLucideIcon("trending-up", [["path", {
-	d: "M16 7h6v6",
-	key: "box55l"
-}], ["path", {
-	d: "m22 7-8.5 8.5-5-5L2 17",
-	key: "1t1m79"
-}]]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
 var Umbrella = createLucideIcon("umbrella", [
 	["path", {
 		d: "M12 13v7a2 2 0 0 0 4 0",
@@ -658,45 +485,5 @@ var Warehouse = createLucideIcon("warehouse", [
 		key: "1jwigz"
 	}]
 ]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
-var Wheat = createLucideIcon("wheat", [
-	["path", {
-		d: "M2 22 16 8",
-		key: "60hf96"
-	}],
-	["path", {
-		d: "M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z",
-		key: "1rdhi6"
-	}],
-	["path", {
-		d: "M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z",
-		key: "1sdzmb"
-	}],
-	["path", {
-		d: "M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z",
-		key: "eoatbi"
-	}],
-	["path", {
-		d: "M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z",
-		key: "19rau1"
-	}],
-	["path", {
-		d: "M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z",
-		key: "tc8ph9"
-	}],
-	["path", {
-		d: "M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z",
-		key: "2m8kc5"
-	}],
-	["path", {
-		d: "M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z",
-		key: "vex3ng"
-	}]
-]);
 //#endregion
-export { Check as C, ArrowLeft as E, CircleUser as S, Bot as T, Languages as _, Umbrella as a, CloudSun as b, Sprout as c, Ruler as d, Pencil as f, MapPin as g, MessageSquare as h, User as i, ShoppingCart as l, PackageOpen as m, Warehouse as n, TrendingUp as o, Package as p, Users as r, Thermometer as s, Wheat as t, Send as u, Handshake as v, Calculator as w, CloudRain as x, Droplets as y };
+export { CloudRain as _, Thermometer as a, Send as c, Package as d, PackageOpen as f, Droplets as g, Handshake as h, Umbrella as i, Ruler as l, Languages as m, Users as n, Sprout as o, MapPin as p, User as r, ShoppingCart as s, Warehouse as t, Pencil as u, Check as v, ArrowLeft as y };

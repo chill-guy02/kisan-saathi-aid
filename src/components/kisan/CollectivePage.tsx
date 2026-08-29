@@ -86,6 +86,7 @@ export function CollectivePage() {
         </p>
       </header>
 
+      {/* Tab bar */}
       <nav className="mt-4 flex gap-1 rounded-xl border bg-card p-1 shadow-sm">
         {tabs.map(({ id, icon: Icon, label }) => (
           <button
@@ -103,6 +104,7 @@ export function CollectivePage() {
         ))}
       </nav>
 
+      {/* Tab content */}
       <div className="mt-4 flex-1">
         {tab === "sell" && (
           <section className="rounded-xl border bg-card p-4 shadow-sm">

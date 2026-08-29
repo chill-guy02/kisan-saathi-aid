@@ -2,7 +2,7 @@ import { i as __toESM } from "../_runtime.mjs";
 import { o as require_jsx_runtime, s as require_react } from "../_libs/@ai-sdk/react+[...].mjs";
 import { _ as useProfile, a as collectiveSales, c as extraRealization, g as useLang, h as storageSummary, m as storageOptions, p as pick, r as bulkProcurement, u as formatINR } from "./collectiveData-CbgFn1e8.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { E as ArrowLeft, g as MapPin, l as ShoppingCart, m as PackageOpen, n as Warehouse, p as Package, r as Users, v as Handshake } from "../_libs/lucide-react.mjs";
+import { d as Package, f as PackageOpen, h as Handshake, n as Users, p as MapPin, s as ShoppingCart, t as Warehouse, y as ArrowLeft } from "../_libs/lucide-react.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/collective-D-rxCnh5.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();

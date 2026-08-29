@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CloudRain, Droplets, Thermometer, Umbrella, MapPin, CloudSun } from "lucide-react";
+import { CloudRain, Droplets, Thermometer, Umbrella } from "lucide-react";
 import { weatherDemo } from "@/data/demoData";
 import { fetchWeather } from "@/lib/weather";
 import { useProfileLocation } from "@/lib/profile";
@@ -19,10 +19,10 @@ export function WeatherCard() {
   const w = data ?? { ...weatherDemo, live: false };
 
   const stats = [
-    { icon: Thermometer, label: pick(lang, "तापमान", "Temperature"), value: `${w.temperatureC}°C`, color: "text-orange-500" },
-    { icon: Umbrella, label: pick(lang, "बारिश संभावना", "Rain chance"), value: `${w.rainProbability}%`, color: "text-blue-500" },
-    { icon: CloudRain, label: pick(lang, "वर्षा", "Rainfall"), value: `${w.rainfallMm} mm`, color: "text-sky-500" },
-    { icon: Droplets, label: pick(lang, "नमी", "Humidity"), value: `${w.humidity}%`, color: "text-cyan-500" },
+    { icon: Thermometer, label: pick(lang, "तापमान", "Temperature"), value: `${w.temperatureC}°C` },
+    { icon: Umbrella, label: pick(lang, "बारिश की संभावना", "Rain probability"), value: `${w.rainProbability}%` },
+    { icon: CloudRain, label: pick(lang, "अनुमानित वर्षा", "Expected rainfall"), value: `${w.rainfallMm} mm` },
+    { icon: Droplets, label: pick(lang, "नमी", "Humidity"), value: `${w.humidity}%` },
   ];
 
   const interpretationEn =
@@ -34,44 +34,44 @@ export function WeatherCard() {
   const interpretation = lang === "hi" ? w.interpretationHi : interpretationEn;
 
   return (
-    <section className="rounded-xl border bg-card p-4 shadow-sm">
+    <section id="weather" className="rounded-3xl border bg-card p-5 shadow-[var(--shadow-card)]">
       <header className="flex items-center justify-between">
-        <h2 className="flex items-center gap-1.5 text-base font-bold">
-          <CloudSun className="h-5 w-5 text-primary" />
-          {pick(lang, "मौसम", "Weather")}
+        <h2 className="flex items-center gap-2 text-xl font-bold">
+          🌦️ {pick(lang, "मौसम", "Weather")} — {pick(lang, loc.hi, loc.en)}
         </h2>
-        <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <MapPin className="h-3 w-3" />
-            {pick(lang, loc.hi, loc.en)}
-          </span>
-          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${w.live ? "bg-green-100 text-green-700" : "bg-muted text-muted-foreground"}`}>
-            {isLoading ? "…" : w.live ? pick(lang, "लाइव", "Live") : "Demo"}
-          </span>
-        </div>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+          {isLoading
+            ? pick(lang, "लोड हो रहा है…", "Loading…")
+            : w.live
+              ? pick(lang, "लाइव डेटा", "Live data")
+              : "Demo data"}
+        </span>
       </header>
 
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        {stats.map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="rounded-lg border bg-background px-3 py-2.5">
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        {stats.map(({ icon: Icon, label, value }) => (
+          <div key={label} className="rounded-2xl bg-sky-soft px-3 py-3">
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Icon className={`h-3.5 w-3.5 ${color}`} />
+              <Icon className="h-4 w-4 text-sky" />
               {label}
             </div>
-            <div className="mt-0.5 text-xl font-bold">{value}</div>
+            <div className="mt-1 text-2xl font-bold">{value}</div>
           </div>
         ))}
       </div>
 
-      <div className="mt-3 flex items-start gap-2 rounded-lg bg-primary/5 px-3 py-2.5">
-        <span className="text-base">💡</span>
-        <p className="text-sm font-medium text-foreground">{interpretation}</p>
-      </div>
+      <p className="mt-4 rounded-2xl bg-leaf-soft px-4 py-3 text-lg font-semibold text-secondary-foreground">
+        {interpretation}
+      </p>
 
-      <p className="mt-2 text-xs text-muted-foreground">
+      <p className="mt-3 text-xs text-muted-foreground">
         {isError
-          ? pick(lang, "लाइव मौसम नहीं मिल सका।", "Live weather unavailable.")
-          : pick(lang, "स्रोत: Open-Meteo", "Source: Open-Meteo")}
+          ? pick(
+              lang,
+              "लाइव मौसम नहीं मिल सका — डेमो डेटा दिखाया जा रहा है।",
+              "Live weather unavailable — showing demo data.",
+            )
+          : pick(lang, "स्रोत: Open-Meteo (आज का पूर्वानुमान)", "Source: Open-Meteo (today's forecast)")}
       </p>
     </section>
   );
