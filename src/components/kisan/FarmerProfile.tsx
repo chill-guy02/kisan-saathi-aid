@@ -6,7 +6,7 @@ import { useLang, pick } from "@/lib/i18n";
 
 const crops: Crop[] = ["Wheat", "Rice", "Soybean"];
 
-export function FarmerProfile() {
+export function FarmerProfile({ full = false }: { full?: boolean }) {
   const { lang } = useLang();
   const { profile, updateProfile } = useProfile();
   const loc = useProfileLocation();
@@ -19,62 +19,91 @@ export function FarmerProfile() {
     { icon: Ruler, label: pick(lang, "ज़मीन", "Land"), value: `${profile.acres} ${pick(lang, "एकड़", "acres")}` },
   ];
 
-  return (
-    <section
-      className="rounded-3xl p-5 text-primary-foreground shadow-[var(--shadow-card)]"
-      style={{ backgroundImage: "var(--gradient-hero)" }}
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-foreground/20 text-2xl">
+  if (!full && !editing) {
+    return (
+      <section
+        className="flex items-center gap-3 rounded-xl p-3 text-primary-foreground shadow-sm"
+        style={{ backgroundImage: "var(--gradient-hero)" }}
+      >
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/20 text-lg">
           🌾
         </div>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold leading-tight">
+          <div className="flex items-center gap-2 text-sm font-bold">
+            {profile.name}
+            <span className="opacity-70">·</span>
+            <span className="font-normal opacity-90">{pick(lang, loc.hi, loc.en)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs opacity-80">
+            {pick(lang, cropLabels[profile.crop], profile.crop)} · {profile.acres} {pick(lang, "एकड़", "acres")}
+          </div>
+        </div>
+        <button
+          onClick={() => setEditing(true)}
+          className="flex h-8 items-center gap-1 rounded-lg bg-white/20 px-2.5 text-xs font-semibold transition-colors hover:bg-white/30"
+        >
+          <Pencil className="h-3 w-3" />
+          {pick(lang, "बदलें", "Edit")}
+        </button>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      className="rounded-xl p-4 text-primary-foreground shadow-sm"
+      style={{ backgroundImage: "var(--gradient-hero)" }}
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/20 text-xl">
+          🌾
+        </div>
+        <div className="flex-1">
+          <h2 className="text-lg font-bold leading-tight">
             {pick(lang, "किसान साथी", "Kisan Saathi")}
-          </h1>
-          <p className="text-sm opacity-90">
-            {pick(lang, "आपकी खेती का आसान डिजिटल साथी", "Your easy digital farming partner")}
+          </h2>
+          <p className="text-xs opacity-80">
+            {pick(lang, "आपकी खेती का डिजिटल साथी", "Your digital farming partner")}
           </p>
         </div>
         <button
           onClick={() => setEditing((e) => !e)}
-          aria-label={editing ? pick(lang, "सहेजें", "Save") : pick(lang, "प्रोफ़ाइल बदलें", "Edit profile")}
-          className="flex h-10 items-center gap-1.5 rounded-2xl bg-primary-foreground/20 px-3 text-sm font-semibold transition-colors hover:bg-primary-foreground/30"
+          className="flex h-8 items-center gap-1.5 rounded-lg bg-white/20 px-2.5 text-xs font-semibold transition-colors hover:bg-white/30"
         >
-          {editing ? <Check className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+          {editing ? <Check className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
           {editing ? pick(lang, "सहेजें", "Save") : pick(lang, "बदलें", "Edit")}
         </button>
       </div>
 
       {!editing ? (
-        <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-2">
           {items.map(({ icon: Icon, label, value }) => (
-            <div key={label} className="rounded-2xl bg-primary-foreground/15 px-3 py-2.5">
-              <div className="flex items-center gap-1.5 text-xs opacity-90">
-                <Icon className="h-3.5 w-3.5" />
+            <div key={label} className="rounded-lg bg-white/10 px-3 py-2">
+              <div className="flex items-center gap-1.5 text-xs opacity-80">
+                <Icon className="h-3 w-3" />
                 {label}
               </div>
-              <div className="mt-0.5 text-lg font-semibold">{value}</div>
+              <div className="mt-0.5 text-sm font-semibold">{value}</div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="mt-5 space-y-4 rounded-2xl bg-primary-foreground/15 p-4">
+        <div className="mt-4 space-y-3 rounded-lg bg-white/10 p-3">
           <label className="block">
-            <span className="text-xs opacity-90">{pick(lang, "किसान का नाम", "Farmer name")}</span>
+            <span className="text-xs opacity-80">{pick(lang, "किसान का नाम", "Farmer name")}</span>
             <input
               value={profile.name}
               onChange={(e) => updateProfile({ name: e.target.value })}
-              className="mt-1 h-11 w-full rounded-xl border-0 bg-background px-3 text-base text-foreground outline-none focus:ring-2 focus:ring-ring"
+              className="mt-1 h-10 w-full rounded-lg border-0 bg-background px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
             />
           </label>
 
           <label className="block">
-            <span className="text-xs opacity-90">{pick(lang, "स्थान", "Location")}</span>
+            <span className="text-xs opacity-80">{pick(lang, "स्थान", "Location")}</span>
             <select
               value={profile.locationId}
               onChange={(e) => updateProfile({ locationId: e.target.value as LocationId })}
-              className="mt-1 h-11 w-full rounded-xl border-0 bg-background px-3 text-base text-foreground outline-none focus:ring-2 focus:ring-ring"
+              className="mt-1 h-10 w-full rounded-lg border-0 bg-background px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
             >
               {locations.map((l) => (
                 <option key={l.id} value={l.id}>
@@ -85,16 +114,16 @@ export function FarmerProfile() {
           </label>
 
           <div>
-            <span className="text-xs opacity-90">{pick(lang, "मुख्य फसल", "Main crop")}</span>
-            <div className="mt-1 grid grid-cols-3 gap-2">
+            <span className="text-xs opacity-80">{pick(lang, "मुख्य फसल", "Main crop")}</span>
+            <div className="mt-1 grid grid-cols-3 gap-1.5">
               {crops.map((c) => (
                 <button
                   key={c}
                   onClick={() => updateProfile({ crop: c })}
-                  className={`rounded-xl px-2 py-2.5 text-base font-semibold transition-colors ${
+                  className={`rounded-lg px-2 py-2 text-sm font-semibold transition-colors ${
                     profile.crop === c
                       ? "bg-background text-foreground"
-                      : "bg-primary-foreground/20 hover:bg-primary-foreground/30"
+                      : "bg-white/20 hover:bg-white/30"
                   }`}
                 >
                   {pick(lang, cropLabels[c], c)}
@@ -104,8 +133,8 @@ export function FarmerProfile() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="opacity-90">{pick(lang, "ज़मीन (एकड़)", "Land (acres)")}</span>
+            <div className="flex items-center justify-between text-xs">
+              <span className="opacity-80">{pick(lang, "ज़मीन (एकड़)", "Land (acres)")}</span>
               <span className="font-bold">
                 {profile.acres} {pick(lang, "एकड़", "acres")}
               </span>
@@ -118,7 +147,7 @@ export function FarmerProfile() {
               value={profile.acres}
               onChange={(e) => updateProfile({ acres: Number(e.target.value) })}
               aria-label={pick(lang, "ज़मीन (एकड़)", "Land (acres)")}
-              className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-primary-foreground/30"
+              className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/30"
             />
           </div>
         </div>

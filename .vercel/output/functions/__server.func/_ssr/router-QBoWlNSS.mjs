@@ -2,24 +2,24 @@ import { i as __toESM } from "../_runtime.mjs";
 import { a as streamText, i as isStepCount, o as require_jsx_runtime, r as convertToModelMessages, s as require_react } from "../_libs/@ai-sdk/react+[...].mjs";
 import { a as collectiveSales, c as extraRealization, f as marketPrices, g as useLang, h as storageSummary, i as calculateCost, l as farmerProfile, m as storageOptions, n as ProfileProvider, r as bulkProcurement, s as cropLabels, t as LanguageProvider, u as formatINR } from "./collectiveData-CbgFn1e8.mjs";
 import { c as HeadContent, d as Outlet, f as lazyRouteComponent, g as useRouter, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
-import { m as Languages } from "../_libs/lucide-react.mjs";
+import { _ as Languages } from "../_libs/lucide-react.mjs";
 import { t as RAIPUR } from "./weather-xTWzjgY3.mjs";
 import { n as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { pt as tool } from "../_libs/@ai-sdk/gateway+[...].mjs";
 import { n as numberType, r as objectType, t as enumType } from "../_libs/zod.mjs";
 import { t as createGoogle } from "../_libs/ai-sdk__google.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CDRgfAU-.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-QBoWlNSS.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-i_N2fov8.css";
+var styles_default = "/assets/styles-BFJb1lWT.css";
 function LanguageToggle() {
 	const { lang, setLang } = useLang();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 		onClick: () => setLang(lang === "hi" ? "en" : "hi"),
-		className: "fixed right-4 top-4 z-50 flex h-10 items-center gap-1.5 rounded-full border bg-card/95 px-3.5 text-sm font-bold shadow-md backdrop-blur transition-colors hover:bg-muted",
+		className: "fixed right-4 top-3 z-50 flex h-9 items-center gap-1.5 rounded-lg border bg-card/95 px-3 text-sm font-bold shadow-sm backdrop-blur transition-colors hover:bg-muted",
 		"aria-label": lang === "hi" ? "Switch to English" : "हिंदी में बदलें",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Languages, { className: "h-4 w-4" }), lang === "hi" ? "EN" : "हिं"]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Languages, { className: "h-4 w-4 text-primary" }), lang === "hi" ? "EN" : "हिं"]
 	});
 }
 function reportLovableError(error, context = {}) {
@@ -174,7 +174,7 @@ function RootComponent() {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(LanguageProvider, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LanguageToggle, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {})] }) })
 	});
 }
-var $$splitComponentImporter$1 = () => import("./routes-BXYVqpUW.mjs");
+var $$splitComponentImporter$1 = () => import("./routes-CKTy3DGc.mjs");
 var Route$2 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "किसान साथी — खेती का डिजिटल साथी | Kisan Saathi" },
