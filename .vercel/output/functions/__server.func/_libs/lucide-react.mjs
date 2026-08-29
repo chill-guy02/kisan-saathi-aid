@@ -274,6 +274,30 @@ var PackageOpen = createLucideIcon("package-open", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Package = createLucideIcon("package", [
+	["path", {
+		d: "M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z",
+		key: "1a0edw"
+	}],
+	["path", {
+		d: "M12 22V12",
+		key: "d0xqtd"
+	}],
+	["polyline", {
+		points: "3.29 7 12 12 20.71 7",
+		key: "ousv84"
+	}],
+	["path", {
+		d: "m7.5 4.27 9 5.15",
+		key: "1c824w"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Pencil = createLucideIcon("pencil", [["path", {
 	d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
 	key: "1a8usu"
@@ -417,6 +441,32 @@ var User = createLucideIcon("user", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Users = createLucideIcon("users", [
+	["path", {
+		d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2",
+		key: "1yyitq"
+	}],
+	["path", {
+		d: "M16 3.128a4 4 0 0 1 0 7.744",
+		key: "16gr8j"
+	}],
+	["path", {
+		d: "M22 21v-2a4 4 0 0 0-3-3.87",
+		key: "kshegd"
+	}],
+	["circle", {
+		cx: "9",
+		cy: "7",
+		r: "4",
+		key: "nufk8"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Warehouse = createLucideIcon("warehouse", [
 	["path", {
 		d: "M18 21V10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v11",
@@ -436,4 +486,4 @@ var Warehouse = createLucideIcon("warehouse", [
 	}]
 ]);
 //#endregion
-export { ArrowLeft as _, Sprout as a, Ruler as c, MapPin as d, Languages as f, Check as g, CloudRain as h, Thermometer as i, Pencil as l, Droplets as m, User as n, ShoppingCart as o, Handshake as p, Umbrella as r, Send as s, Warehouse as t, PackageOpen as u };
+export { CloudRain as _, Thermometer as a, Send as c, Package as d, PackageOpen as f, Droplets as g, Handshake as h, Umbrella as i, Ruler as l, Languages as m, Users as n, Sprout as o, MapPin as p, User as r, ShoppingCart as s, Warehouse as t, Pencil as u, Check as v, ArrowLeft as y };

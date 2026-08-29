@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-8XhDLeMF.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-VEOKgm5G.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "/tmp/cc-agent/70386714/project/src/routes/__root.tsx",
@@ -7,22 +7,22 @@ var tsrStartManifest = () => ({ routes: {
 			"/collective",
 			"/api/chat"
 		],
-		preloads: ["/assets/index-C-MuWu7B.js"],
+		preloads: ["/assets/index-DNw4_eIC.js"],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-C-MuWu7B.js"
+			src: "/assets/index-DNw4_eIC.js"
 		} }]
 	},
 	"/": {
 		filePath: "/tmp/cc-agent/70386714/project/src/routes/index.tsx",
 		children: void 0,
-		preloads: ["/assets/routes-B3cPgQG-.js", "/assets/CollectiveHighlight-Cmez5LV0.js"]
+		preloads: ["/assets/routes-973jC6Dr.js", "/assets/collectiveData-1zmuxAfL.js"]
 	},
 	"/collective": {
 		filePath: "/tmp/cc-agent/70386714/project/src/routes/collective.tsx",
 		children: void 0,
-		preloads: ["/assets/collective-Cx6oKg3K.js", "/assets/CollectiveHighlight-Cmez5LV0.js"]
+		preloads: ["/assets/collective-BUEqHaC3.js", "/assets/collectiveData-1zmuxAfL.js"]
 	}
 } });
 //#endregion
